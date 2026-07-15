@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -6,380 +6,506 @@
     <title>Billetera UCA</title>
     <style>
         :root {
-            --bg: #101214;
-            --panel: #171b1f;
-            --panel-soft: #20262c;
-            --line: #343b43;
-            --text: #f6f8fb;
-            --muted: #9aa7b4;
-            --orange: #ff7a1a;
-            --teal: #27d3bd;
-            --blue: #6da8ff;
-            --danger: #ff6b6b;
-            --success: #7bd88f;
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --surface-soft: #f8fafc;
+            --ink: #0b0f14;
+            --muted: #6d7682;
+            --line: #e3e7ec;
+            --dark: #050608;
+            --green: #087f5b;
+            --green-soft: #e7f6ef;
+            --red: #c92a2a;
+            --red-soft: #fff0f0;
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             min-height: 100vh;
-            color: var(--text);
+            color: var(--ink);
             font-family: Arial, sans-serif;
-            background:
-                radial-gradient(circle at top left, rgba(39, 211, 189, 0.18), transparent 34%),
-                linear-gradient(135deg, #0d0f11 0%, #15191d 55%, #111316 100%);
+            background: var(--bg);
         }
 
-        button,
-        input {
-            font: inherit;
-        }
+        button, input { font: inherit; }
 
         .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 180px 1fr auto;
+            align-items: center;
+            gap: 24px;
+            min-height: 58px;
+            padding: 0 38px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand { font-size: 18px; font-weight: 900; }
+
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 34px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .nav span:first-child {
+            color: var(--ink);
+            font-weight: 800;
+            border-bottom: 2px solid var(--ink);
+        }
+
+        .top-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 14px 24px;
-            border-bottom: 1px solid var(--line);
-            background: rgba(15, 17, 19, 0.86);
-            backdrop-filter: blur(10px);
+            gap: 18px;
         }
 
-        .tabs {
+        .mini-user {
             display: flex;
+            align-items: center;
             gap: 8px;
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 700;
         }
 
-        .tab {
-            width: 86px;
-            height: 32px;
-            border: 1px solid #66717d;
-            border-radius: 7px;
-            background: #101214;
-        }
-
-        .brand {
-            font-weight: 800;
-            letter-spacing: 0;
-        }
-
-        .page {
-            width: min(1120px, calc(100% - 32px));
-            margin: 38px auto;
-        }
-
-        .wallet-grid {
+        .mini-avatar {
             display: grid;
-            grid-template-columns: 260px minmax(280px, 1fr) 300px;
-            gap: 22px;
-            align-items: stretch;
+            place-items: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: #fff;
+            background: #111827;
         }
 
-        .panel,
+        .logout {
+            min-height: 34px;
+            padding: 0 14px;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            color: var(--ink);
+            background: transparent;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 240px minmax(0, 1fr);
+            gap: 24px;
+            width: min(1120px, calc(100% - 36px));
+            margin: 28px auto;
+        }
+
+        .sidebar {
+            display: grid;
+            gap: 18px;
+            align-content: start;
+        }
+
         .card {
             border: 1px solid var(--line);
             border-radius: 8px;
-            background: rgba(23, 27, 31, 0.92);
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
-        }
-
-        .panel {
-            padding: 22px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
         }
 
         .profile {
-            display: grid;
-            justify-items: center;
+            padding: 24px 18px;
             text-align: center;
         }
 
         .avatar {
             display: grid;
             place-items: center;
-            width: 92px;
-            height: 92px;
-            margin: 6px 0 14px;
+            width: 82px;
+            height: 82px;
+            margin: 0 auto 14px;
+            border: 4px solid #edf1f5;
             border-radius: 50%;
-            color: #111316;
-            font-size: 38px;
+            color: #fff;
+            font-size: 30px;
             font-weight: 900;
-            background: linear-gradient(145deg, var(--orange), #ff9f45);
-            box-shadow: 0 0 0 8px rgba(255, 122, 26, 0.1);
+            background: linear-gradient(145deg, #111827, #4b5563);
         }
 
-        .label {
+        .profile h2 { margin: 0; font-size: 21px; }
+        .profile p { margin: 6px 0 18px; color: var(--muted); font-size: 13px; }
+
+        .profile-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+            text-align: left;
+        }
+
+        .meta-label {
             color: var(--muted);
-            font-size: 13px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
         }
 
-        .username {
-            width: 100%;
-            margin-top: 8px;
-            padding: 10px 12px;
-            border: 1px solid #5a6470;
-            border-radius: 6px;
-            font-weight: 700;
-            background: #111417;
+        .meta-value { display: block; margin-top: 4px; font-size: 12px; font-weight: 900; }
+
+        .side-menu {
+            display: grid;
+            gap: 4px;
+            padding: 8px;
+            color: var(--muted);
+            font-size: 14px;
         }
 
-        .link-button {
-            display: inline-flex;
+        .menu-item {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 36px;
-            padding: 0 14px;
-            border: 1px solid #65717d;
+            min-height: 44px;
+            padding: 0 12px;
             border-radius: 6px;
-            color: var(--text);
-            text-decoration: none;
-            background: #15191d;
         }
 
-        .wallet-card {
+        .menu-item:first-child { color: var(--ink); background: var(--surface-soft); font-weight: 800; }
+
+        .content { display: grid; gap: 20px; }
+        .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; }
+
+        .balance-card {
             position: relative;
             overflow: hidden;
-            min-height: 220px;
-            padding: 28px;
-            background:
-                linear-gradient(135deg, rgba(39, 211, 189, 0.2), transparent 40%),
-                linear-gradient(145deg, #1d2329, #111417);
+            min-height: 230px;
+            padding: 32px;
+            color: #fff;
+            border-radius: 8px;
+            background: var(--dark);
+            box-shadow: 0 22px 48px rgba(0, 0, 0, 0.22);
         }
 
-        .wallet-card::after {
+        .balance-card::before, .balance-card::after {
             content: "";
             position: absolute;
-            right: -44px;
-            bottom: -54px;
-            width: 180px;
-            height: 180px;
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 50%;
+            border: 18px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
         }
 
-        .wallet-title {
-            margin: 0;
-            font-size: 30px;
-        }
+        .balance-card::before { right: 26px; top: -22px; width: 82px; height: 82px; }
+        .balance-card::after { right: -28px; top: 42px; width: 74px; height: 74px; }
 
-        .wallet-subtitle {
-            margin: 8px 0 30px;
-            color: var(--muted);
+        .eyebrow {
+            margin: 0 0 10px;
+            color: #aeb7c2;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
         }
 
         .balance {
-            margin: 0;
-            font-size: 42px;
+            position: relative;
+            z-index: 1;
+            margin: 0 0 28px;
+            font-size: clamp(34px, 5vw, 48px);
+            line-height: 1;
             font-weight: 900;
+            letter-spacing: 0;
         }
 
-        .balance-note {
-            color: var(--teal);
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .actions {
+        .quick-actions {
+            position: relative;
+            z-index: 1;
             display: grid;
-            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            max-width: 390px;
         }
 
-        .action-form {
-            display: grid;
-            gap: 10px;
-            padding: 14px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: var(--panel-soft);
-        }
+        .quick-form { display: grid; gap: 8px; }
 
-        .action-form h2 {
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .action-form input {
+        .quick-form input {
             width: 100%;
-            min-height: 40px;
-            padding: 9px 11px;
-            border: 1px solid #55616d;
+            min-height: 38px;
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
             border-radius: 6px;
-            color: var(--text);
-            background: #111417;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        .primary,
-        .secondary,
-        .logout {
-            min-height: 40px;
+        .quick-form input::placeholder { color: #bac3cf; }
+
+        .btn {
+            min-height: 42px;
             border: 0;
             border-radius: 6px;
-            color: #101214;
-            font-weight: 800;
+            font-weight: 900;
             cursor: pointer;
         }
 
-        .primary {
-            background: var(--teal);
-        }
+        .btn-green { color: #fff; background: var(--green); }
+        .btn-light { color: var(--ink); background: #fff; }
 
-        .secondary {
-            background: var(--orange);
-        }
-
-        .logout {
-            padding: 0 14px;
-            color: var(--text);
-            background: #2a3036;
-        }
-
-        .messages {
+        .manage-card {
             display: grid;
-            gap: 8px;
-            margin-bottom: 18px;
+            gap: 16px;
+            align-content: center;
+            padding: 22px;
+            text-align: center;
         }
 
-        .message {
-            padding: 12px 14px;
-            border-radius: 7px;
-            color: #101214;
-            font-weight: 700;
-            background: var(--success);
+        .manage-card h2 { margin: 0; font-size: 15px; }
+
+        .outline-btn, .delete-btn {
+            width: 100%;
+            min-height: 46px;
+            border-radius: 6px;
+            font-weight: 900;
+            cursor: pointer;
+            background: #fff;
         }
 
-        .message.error {
-            background: var(--danger);
+        .outline-btn { border: 1px solid var(--line); color: var(--ink); }
+        .delete-btn { border: 1px solid #f2b8b8; color: var(--red); background: var(--red-soft); }
+
+        .details-grid { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 20px; }
+        .details { padding: 22px; }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
-        .history {
-            margin-top: 22px;
-            padding: 20px;
+        .section-head h2 { margin: 0; font-size: 16px; letter-spacing: 0; }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 999px;
+            color: var(--green);
+            background: var(--green-soft);
+            font-size: 12px;
+            font-weight: 900;
         }
 
-        .history h2 {
-            margin: 0 0 14px;
-            font-size: 18px;
+        .detail-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
         }
+
+        .detail-value { display: block; margin-top: 6px; font-weight: 900; }
+        .history { padding: 22px; }
 
         .movement {
             display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 12px;
-            padding: 12px 0;
+            grid-template-columns: 42px 1fr auto;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 0;
             border-top: 1px solid var(--line);
         }
 
-        .movement:first-of-type {
-            border-top: 0;
-        }
+        .movement:first-of-type { border-top: 0; }
 
-        .movement small {
-            color: var(--muted);
-        }
-
-        .amount-deposito {
-            color: var(--teal);
+        .movement-icon {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--green);
+            background: var(--green-soft);
             font-weight: 900;
         }
 
-        .amount-retiro {
-            color: var(--orange);
-            font-weight: 900;
+        .movement.retiro .movement-icon { color: var(--red); background: var(--red-soft); }
+        .movement strong { display: block; margin-bottom: 3px; font-size: 14px; }
+        .movement small { color: var(--muted); }
+
+        .movement-amount { text-align: right; font-weight: 900; }
+        .movement-amount small { display: block; margin-top: 4px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+        .amount-deposito { color: var(--green); }
+        .amount-retiro { color: var(--ink); }
+
+        .empty { margin: 0; color: var(--muted); }
+
+        .messages { display: grid; gap: 8px; }
+
+        .message {
+            padding: 12px 14px;
+            border: 1px solid #b8e5d0;
+            border-radius: 8px;
+            color: #075c42;
+            background: var(--green-soft);
+            font-weight: 800;
         }
 
-        .empty {
-            margin: 0;
-            color: var(--muted);
+        .message.error { border-color: #f2b8b8; color: var(--red); background: var(--red-soft); }
+
+        @media (max-width: 960px) {
+            .topbar, .layout, .hero-grid, .details-grid { grid-template-columns: 1fr; }
+            .topbar { gap: 12px; padding: 14px 18px; }
+            .nav { justify-content: flex-start; gap: 18px; overflow-x: auto; }
+            .top-actions { justify-content: space-between; }
         }
 
-        @media (max-width: 900px) {
-            .wallet-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .topbar {
-                padding: 12px 16px;
-            }
-
-            .tabs {
-                display: none;
-            }
+        @media (max-width: 620px) {
+            .quick-actions, .detail-list { grid-template-columns: 1fr; }
+            .movement { grid-template-columns: 36px 1fr; }
+            .movement-amount { grid-column: 2; text-align: left; }
         }
     </style>
 </head>
 <body>
     <header class="topbar">
-        <div class="tabs" aria-hidden="true">
-            <span class="tab"></span>
-            <span class="tab"></span>
-        </div>
         <div class="brand">Billetera UCA</div>
-        <form method="POST" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button class="logout" type="submit">Cerrar sesion</button>
-        </form>
+        <nav class="nav" aria-label="Principal">
+            <a href="{% url 'index' %}" style="text-decoration:none;color:inherit;">Inicio</a>
+            <a href="{% url 'historial' %}" style="text-decoration:none;color:inherit;">Historial</a>
+            <a href="{% url 'index' %}" style="text-decoration:none;color:inherit;">Billetera</a>
+            <a href="{% url 'perfil' %}" style="text-decoration:none;color:inherit;">Perfil</a>
+        </nav>
+        <div class="top-actions">
+            <div class="mini-user">
+                <span class="mini-avatar">{{ request.user.username|first|upper }}</span>
+                <span>{{ request.user.get_full_name|default:request.user.username }}</span>
+            </div>
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="logout" type="submit">Cerrar sesion</button>
+            </form>
+        </div>
     </header>
 
-    <main class="page">
-        {% if messages %}
-            <section class="messages">
-                {% for message in messages %}
-                    <div class="message {{ message.tags }}">{{ message }}</div>
+    <main class="layout">
+        <aside class="sidebar">
+            <section class="card profile">
+                <div class="avatar">{{ request.user.username|first|upper }}</div>
+                <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+                <p>{{ request.user.first_name|default:request.user.username }}</p>
+                <div class="profile-meta">
+                    <div>
+                        <span class="meta-label">Plan</span>
+                        <span class="meta-value">Gold Edition</span>
+                    </div>
+                    <div>
+                        <span class="meta-label">Miembro desde</span>
+                        <span class="meta-value">{{ billetera.fechaCreacion|date:"M Y" }}</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="side-menu">
+                <div class="menu-item">Seguridad</div>
+                <div class="menu-item">Soporte tecnico</div>
+                <div class="menu-item">Mis tarjetas</div>
+            </section>
+        </aside>
+
+        <section class="content">
+            {% if messages %}
+                <section class="messages">
+                    {% for message in messages %}
+                        <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </section>
+            {% endif %}
+
+            <section class="hero-grid">
+                <div class="balance-card">
+                    <p class="eyebrow">Saldo disponible</p>
+                    <p class="balance">${{ saldo|floatformat:2 }}</p>
+                    <div class="quick-actions">
+                        <form class="quick-form" method="POST">
+                            {% csrf_token %}
+                            {{ form.monto }}
+                            <button class="btn btn-green" type="submit" name="tipo" value="deposito">Depositar</button>
+                        </form>
+
+                        <form class="quick-form" method="POST">
+                            {% csrf_token %}
+                            {{ form.monto }}
+                            <button class="btn btn-light" type="submit" name="tipo" value="retiro">Retirar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <aside class="card manage-card">
+                    <h2>Acciones avanzadas de gestion de cuenta</h2>
+                    <a href="{% url 'perfil' %}" class="outline-btn" style="text-decoration:none;display:grid;place-items:center;">Configurar</a>
+                    <form method="POST" action="{% url 'eliminar_billetera' %}">
+                        {% csrf_token %}
+                        <button class="delete-btn" type="submit" onclick="return confirm('Seguro que quieres eliminar esta billetera?')">Eliminar billetera</button>
+                    </form>
+                </aside>
+            </section>
+
+            <section class="details-grid">
+                <section class="card details">
+                    <div class="section-head">
+                        <h2>Detalles de la billetera</h2>
+                        <span class="status">{{ billetera.get_estado_display }}</span>
+                    </div>
+                    <div class="detail-list">
+                        <div>
+                            <span class="meta-label">Identificador unico</span>
+                            <span class="detail-value">UCA-{{ billetera.idBilletera|stringformat:"04d" }}</span>
+                        </div>
+                        <div>
+                            <span class="meta-label">Fecha de creacion</span>
+                            <span class="detail-value">{{ billetera.fechaCreacion|date:"d/m/Y" }}</span>
+                        </div>
+                        <div>
+                            <span class="meta-label">Limite manual</span>
+                            <span class="detail-value">$500,000.00</span>
+                        </div>
+                        <div>
+                            <span class="meta-label">Tipo de cuenta</span>
+                            <span class="detail-value">Corriente pesos</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card manage-card">
+                    <h2>Estado de billetera</h2>
+                    <span class="status">{{ billetera.get_estado_display }}</span>
+                    <p class="empty">Lista para depositos, retiros y consulta de saldo.</p>
+                </section>
+            </section>
+
+            <section class="card history">
+                <div class="section-head">
+                    <h2>Movimientos recientes</h2>
+                    <a href="{% url 'historial' %}" class="meta-label" style="text-decoration:none;">Ver todos</a>
+                </div>
+
+                {% for movimiento in movimientos %}
+                    <div class="movement {{ movimiento.tipo }}">
+                        <div class="movement-icon">{% if movimiento.tipo == 'deposito' %}+{% else %}-{% endif %}</div>
+                        <div>
+                            <strong>{% if movimiento.tipo == 'deposito' %}Transferencia recibida{% else %}Retiro de billetera{% endif %}</strong>
+                            <small>{{ movimiento.fecha|date:"d M, Y" }} - {{ movimiento.fecha|date:"H:i" }}</small>
+                        </div>
+                        <div class="movement-amount amount-{{ movimiento.tipo }}">
+                            {% if movimiento.tipo == 'deposito' %}+{% else %}-{% endif %}${{ movimiento.monto|floatformat:2 }}
+                            <small>Completado</small>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="empty">Todavia no hay movimientos en tu billetera.</p>
                 {% endfor %}
             </section>
-        {% endif %}
-
-        <section class="wallet-grid">
-            <aside class="panel profile">
-                <div class="avatar">{{ request.user.username|first|upper }}</div>
-                <span class="label">Nombre de usuario</span>
-                <div class="username">{{ request.user.username }}</div>
-                <a class="link-button" href="{% url 'admin:index' %}">Editar usuario</a>
-            </aside>
-
-            <section class="card wallet-card">
-                <p class="label">Cuenta principal</p>
-                <h1 class="wallet-title">Billetera UCA</h1>
-                <p class="wallet-subtitle">ID {{ billetera.idBilletera }} · Estado {{ billetera.get_estado_display }}</p>
-                <p class="balance">${{ saldo|floatformat:2 }}</p>
-                <span class="balance-note">Saldo disponible</span>
-            </section>
-
-            <aside class="panel actions">
-                <form class="action-form" method="POST">
-                    {% csrf_token %}
-                    <h2>Depositar</h2>
-                    {{ form.monto }}
-                    <button class="primary" type="submit" name="tipo" value="deposito">+ Depositar</button>
-                </form>
-
-                <form class="action-form" method="POST">
-                    {% csrf_token %}
-                    <h2>Retirar</h2>
-                    {{ form.monto }}
-                    <button class="secondary" type="submit" name="tipo" value="retiro">- Retirar</button>
-                </form>
-            </aside>
-        </section>
-
-        <section class="panel history">
-            <h2>Ultimos movimientos</h2>
-            {% for movimiento in movimientos %}
-                <div class="movement">
-                    <div>
-                        <strong>{{ movimiento.get_tipo_display }}</strong><br>
-                        <small>{{ movimiento.fecha|date:"d/m/Y H:i" }}</small>
-                    </div>
-                    <span class="amount-{{ movimiento.tipo }}">
-                        {% if movimiento.tipo == 'deposito' %}+{% else %}-{% endif %}${{ movimiento.monto|floatformat:2 }}
-                    </span>
-                </div>
-            {% empty %}
-                <p class="empty">Todavia no hay movimientos en tu billetera.</p>
-            {% endfor %}
         </section>
     </main>
 </body>

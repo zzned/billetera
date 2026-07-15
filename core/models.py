@@ -2,43 +2,6 @@ from django.conf import settings
 from django.db import models
 
 
-class Registro(models.Model):
-    texto = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.texto
-
-
-class Usuario(models.Model):
-    idUsuario = models.BigAutoField(primary_key=True)
-    auth_user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100, blank=True)
-    correo = models.EmailField(blank=True)
-    numeroControl = models.CharField(max_length=30, blank=True)
-
-    def registrar(self):
-        self.save()
-        return self
-
-    def editar(self, **datos):
-        for campo, valor in datos.items():
-            if hasattr(self, campo):
-                setattr(self, campo, valor)
-        self.save()
-        return self
-
-    def eliminar(self):
-        self.delete()
-
-    @classmethod
-    def consultar(cls, idUsuario):
-        return cls.objects.get(idUsuario=idUsuario)
-
-    def __str__(self):
-        return f'{self.nombre} {self.apellido}'.strip() or self.auth_user.username
-
-
 class Billetera(models.Model):
     ACTIVA = 'activa'
     INACTIVA = 'inactiva'
@@ -49,7 +12,7 @@ class Billetera(models.Model):
     ]
 
     idBilletera = models.BigAutoField(primary_key=True)
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estado = models.CharField(max_length=10, choices=ESTADOS, default=ACTIVA)
     fechaCreacion = models.DateTimeField(auto_now_add=True)
@@ -80,7 +43,7 @@ class Billetera(models.Model):
         self.delete()
 
     def __str__(self):
-        return f'Billetera #{self.idBilletera} - {self.usuario}'
+        return f'Billetera #{self.idBilletera} - {self.usuario.username}'
 
 
 class Movimiento(models.Model):
@@ -114,3 +77,11 @@ class Movimiento(models.Model):
 
     def __str__(self):
         return f'{self.get_tipo_display()} - ${self.monto}'
+
+class Perfil(models.Model):
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    numeroControl = models.CharField(max_length=20, unique=True)
+    fecha_registro = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Perfil de {self.usuario.username}'

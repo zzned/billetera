@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial - Billetera UCA</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --ink: #0b0f14;
+            --muted: #6d7682;
+            --line: #e3e7ec;
+            --green: #087f5b;
+            --green-soft: #e7f6ef;
+            --red: #c92a2a;
+            --red-soft: #fff0f0;
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 58px;
+            padding: 0 38px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand { font-size: 18px; font-weight: 900; }
+        .back { font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; }
+
+        .layout {
+            width: min(800px, calc(100% - 36px));
+            margin: 36px auto;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        h2 { margin: 0; font-size: 17px; }
+
+        .count {
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--muted);
+        }
+
+        .movement {
+            display: grid;
+            grid-template-columns: 42px 1fr auto;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .movement:first-of-type { border-top: 0; }
+
+        .movement-icon {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--green);
+            background: var(--green-soft);
+            font-weight: 900;
+        }
+
+        .movement.retiro .movement-icon { color: var(--red); background: var(--red-soft); }
+
+        .movement strong { display: block; margin-bottom: 3px; font-size: 14px; }
+        .movement small { color: var(--muted); font-size: 12px; }
+
+        .movement-amount { text-align: right; font-weight: 900; }
+        .movement-amount small {
+            display: block;
+            margin-top: 4px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .amount-deposito { color: var(--green); }
+        .amount-retiro { color: var(--ink); }
+
+        .empty { color: var(--muted); text-align: center; padding: 24px 0; }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">Billetera UCA</div>
+        <a href="{% url 'index' %}" class="back">← Volver al inicio</a>
+    </header>
+
+    <main class="layout">
+        <div class="card">
+            <div class="header">
+                <h2>Historial de movimientos</h2>
+                <span class="count">{{ movimientos.count }} movimientos</span>
+            </div>
+
+            {% for movimiento in movimientos %}
+                <div class="movement {{ movimiento.tipo }}">
+                    <div class="movement-icon">{% if movimiento.tipo == 'deposito' %}+{% else %}-{% endif %}</div>
+                    <div>
+                        <strong>{% if movimiento.tipo == 'deposito' %}Transferencia recibida{% else %}Retiro de billetera{% endif %}</strong>
+                        <small>{{ movimiento.fecha|date:"d M, Y" }} - {{ movimiento.fecha|date:"H:i" }}</small>
+                    </div>
+                    <div class="movement-amount amount-{{ movimiento.tipo }}">
+                        {% if movimiento.tipo == 'deposito' %}+{% else %}-{% endif %}${{ movimiento.monto|floatformat:2 }}
+                        <small>Completado</small>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="empty">No hay movimientos aún.</p>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>
