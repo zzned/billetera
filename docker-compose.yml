@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15
+    container_name: base-datos-proyecto
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mi_clave
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - red_billetera
+
+  web:
+    build: .
+    container_name: django-billetera
+    ports:
+      - "8001:8000"
+    environment:
+      DJANGO_DEBUG: "True"
+    depends_on:
+      - db
+    networks:
+      - red_billetera
+
+networks:
+  red_billetera:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Billetera UCA</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --ink: #0b0f14;
+            --muted: #6d7682;
+            --line: #e3e7ec;
+            --green: #087f5b;
+            --green-soft: #e7f6ef;
+            --red: #c92a2a;
+            --red-soft: #fff0f0;
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 58px;
+            padding: 0 38px;
+            border-bottom: 1px solid var(--line);
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+        }
+
+        .brand { font-size: 18px; font-weight: 900; }
+
+        .back {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .layout {
+            width: min(720px, calc(100% - 36px));
+            margin: 36px auto;
+            display: grid;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            margin: 0 0 20px;
+            font-size: 17px;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+        .btn-green {
+            margin-top: 22px;
+            padding: 11px 28px;
+            border: 0;
+            border-radius: 6px;
+            color: #fff;
+            background: var(--green);
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .btn-red {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 11px 28px;
+            border: 1px solid #f2b8b8;
+            border-radius: 6px;
+            color: var(--red);
+            background: var(--red-soft);
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .message {
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: var(--green-soft);
+            border: 1px solid #b8e5d0;
+            color: #075c42;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 24px 0;
+        }
+
+        .danger-title {
+            margin: 0 0 8px;
+            font-size: 15px;
+            color: var(--red);
+        }
+
+        .danger-desc {
+            margin: 0 0 12px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">Billetera UCA</div>
+        <a href="{% url 'index' %}" class="back">← Volver al inicio</a>
+    </header>
+
+    <main class="layout">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card">
+            <h2>Datos personales</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in user_form %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endfor %}
+                <h2 style="margin-top:24px;">Número de control</h2>
+                {% for field in perfil_form %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endfor %}
+                <button class="btn-green" type="submit">Guardar cambios</button>
+            </form>
+
+            <hr class="divider">
+
+            <h3 class="danger-title">Zona de peligro</h3>
+            <p class="danger-desc">Eliminar tu cuenta es una acción permanente y no se puede deshacer.</p>
+            <a href="{% url 'eliminar_usuario' %}" class="btn-red">Eliminar mi cuenta</a>
+        </div>
+    </main>
+</body>
+</html>

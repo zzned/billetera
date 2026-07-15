@@ -77,3 +77,11 @@ class Movimiento(models.Model):
 
     def __str__(self):
         return f'{self.get_tipo_display()} - ${self.monto}'
+
+class Perfil(models.Model):
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    numeroControl = models.CharField(max_length=20, unique=True)
+    fecha_registro = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Perfil de {self.usuario.username}'

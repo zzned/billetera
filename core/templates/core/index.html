@@ -371,15 +371,15 @@
     <header class="topbar">
         <div class="brand">Billetera UCA</div>
         <nav class="nav" aria-label="Principal">
-            <span>Inicio</span>
-            <span>Historial</span>
-            <span>Billetera</span>
-            <span>Perfil</span>
+            <a href="{% url 'index' %}" style="text-decoration:none;color:inherit;">Inicio</a>
+            <a href="{% url 'historial' %}" style="text-decoration:none;color:inherit;">Historial</a>
+            <a href="{% url 'index' %}" style="text-decoration:none;color:inherit;">Billetera</a>
+            <a href="{% url 'perfil' %}" style="text-decoration:none;color:inherit;">Perfil</a>
         </nav>
         <div class="top-actions">
             <div class="mini-user">
                 <span class="mini-avatar">{{ request.user.username|first|upper }}</span>
-                <span>Usuario de Prueba</span>
+                <span>{{ request.user.get_full_name|default:request.user.username }}</span>
             </div>
             <form method="POST" action="{% url 'logout' %}">
                 {% csrf_token %}
@@ -392,8 +392,8 @@
         <aside class="sidebar">
             <section class="card profile">
                 <div class="avatar">{{ request.user.username|first|upper }}</div>
-                <h2>Test User</h2>
-                <p>{{ request.user.username }}</p>
+                <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+                <p>{{ request.user.first_name|default:request.user.username }}</p>
                 <div class="profile-meta">
                     <div>
                         <span class="meta-label">Plan</span>
@@ -443,7 +443,7 @@
 
                 <aside class="card manage-card">
                     <h2>Acciones avanzadas de gestion de cuenta</h2>
-                    <button class="outline-btn" type="button">Configurar</button>
+                    <a href="{% url 'perfil' %}" class="outline-btn" style="text-decoration:none;display:grid;place-items:center;">Configurar</a>
                     <form method="POST" action="{% url 'eliminar_billetera' %}">
                         {% csrf_token %}
                         <button class="delete-btn" type="submit" onclick="return confirm('Seguro que quieres eliminar esta billetera?')">Eliminar billetera</button>
@@ -487,7 +487,7 @@
             <section class="card history">
                 <div class="section-head">
                     <h2>Movimientos recientes</h2>
-                    <span class="meta-label">Ver todos</span>
+                    <a href="{% url 'historial' %}" class="meta-label" style="text-decoration:none;">Ver todos</a>
                 </div>
 
                 {% for movimiento in movimientos %}

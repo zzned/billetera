@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar cuenta - Billetera UCA</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --ink: #0b0f14;
+            --muted: #6d7682;
+            --line: #e3e7ec;
+            --red: #c92a2a;
+            --red-soft: #fff0f0;
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        .card {
+            width: min(440px, calc(100% - 32px));
+            padding: 36px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: var(--red);
+        }
+
+        p {
+            margin: 0 0 28px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .btn-red {
+            width: 100%;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            color: #fff;
+            background: var(--red);
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-cancel {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            color: var(--ink);
+            background: var(--surface);
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">⚠️</div>
+        <h1>Eliminar cuenta</h1>
+        <p>Esta acción es permanente y no se puede deshacer. Se eliminarán tu cuenta, billetera y todos tus movimientos.</p>
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn-red" type="submit">Sí, eliminar mi cuenta</button>
+        </form>
+        <a href="{% url 'perfil' %}" class="btn-cancel">Cancelar</a>
+    </div>
+</body>
+</html>

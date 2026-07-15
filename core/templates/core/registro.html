@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Billetera UCA</title>
+    <style>
+        :root {
+            --bg: #f4f6f8;
+            --surface: #ffffff;
+            --ink: #0b0f14;
+            --muted: #6d7682;
+            --line: #e3e7ec;
+            --green: #087f5b;
+            --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+        }
+
+        .card {
+            width: min(480px, calc(100% - 32px));
+            padding: 36px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 24px;
+            font-size: 18px;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        label {
+            display: block;
+            margin: 14px 0 6px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--green);
+        }
+
+        ul {
+            margin: 4px 0 0;
+            padding-left: 18px;
+            color: #c92a2a;
+            font-size: 12px;
+        }
+
+        .helptext {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 12px;
+            border: 0;
+            border-radius: 6px;
+            color: #fff;
+            background: var(--green);
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .footer {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .footer a { color: var(--ink); font-weight: 700; }
+
+        .messages { margin-bottom: 16px; }
+        .message {
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: #e7f6ef;
+            border: 1px solid #b8e5d0;
+            color: #075c42;
+            font-size: 13px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="brand">Billetera UCA</div>
+        <h1>Crear cuenta</h1>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <span class="helptext">{{ field.help_text }}</span>
+                {% endif %}
+                {% if field.errors %}
+                    <ul>{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>
+                {% endif %}
+            {% endfor %}
+            <button type="submit">Registrarse</button>
+        </form>
+
+        <p class="footer">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión</a></p>
+    </div>
+</body>
+</html>
